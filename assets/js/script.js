@@ -507,11 +507,64 @@ window.onload = setMinDate;
 
 
 // Function to sort To-Do items by most recent date
-function sortTodosByDate() {
+// function sortTodosByDate() {
+//     const todoList = document.getElementById('todo-list');
+//     const todoItems = Array.from(todoList.getElementsByTagName('li'));
+
+//     // Sort items by due date
+//     todoItems.sort((a, b) => {
+//         const aDateMatch = a.textContent.match(/\(Due: (\d{4}-\d{2}-\d{2})\)/);
+//         const bDateMatch = b.textContent.match(/\(Due: (\d{4}-\d{2}-\d{2})\)/);
+
+//         if (aDateMatch && bDateMatch) {
+//             const aDate = new Date(aDateMatch[1]);
+//             const bDate = new Date(bDateMatch[1]);
+
+//             // Sort by most recent date at the top (descending order)
+//             // return bDate - aDate;
+//             // Sort by most late date at the bottom (ascending order)
+//             return aDate - bDate;
+//         }
+//         return 0;
+//     });
+
+//     // Clear the list and append sorted items
+//     todoList.innerHTML = '';
+//     todoItems.forEach(item => todoList.appendChild(item));
+// }
+
+// // Function to restore the original order of To-Do items
+// function restoreOriginalOrder() {
+//     const todoList = document.getElementById("todo-list");
+//     const items = Array.from(todoList.getElementsByTagName("li"));
+
+//     items.sort((a, b) => {
+//         const aOrder = parseInt(a.getAttribute('data-order'), 10);
+//         const bOrder = parseInt(b.getAttribute('data-order'), 10);
+//         return aOrder - bOrder; // Sort by original order
+//     });
+
+//     // Re-append items in original order to the list
+//     items.forEach(item => todoList.appendChild(item));
+// }
+
+// // Handle the checkbox change event
+// document.getElementById('sort-recent').addEventListener('change', function () {
+//     if (this.checked) {
+//         sortTodosByDate();
+//     } else {
+//         restoreOriginalOrder();
+//     }
+// });
+
+
+
+// Function to sort To-Do items by most recent date (descending order)
+function sortTodosByRecentDate() {
     const todoList = document.getElementById('todo-list');
     const todoItems = Array.from(todoList.getElementsByTagName('li'));
 
-    // Sort items by due date
+    // Sort items by due date (descending order: recent first)
     todoItems.sort((a, b) => {
         const aDateMatch = a.textContent.match(/\(Due: (\d{4}-\d{2}-\d{2})\)/);
         const bDateMatch = b.textContent.match(/\(Due: (\d{4}-\d{2}-\d{2})\)/);
@@ -520,10 +573,7 @@ function sortTodosByDate() {
             const aDate = new Date(aDateMatch[1]);
             const bDate = new Date(bDateMatch[1]);
 
-            // Sort by most recent date at the top (descending order)
-            // return bDate - aDate;
-            // Sort by most late date at the bottom (ascending order)
-            return aDate - bDate;
+            return bDate - aDate; // Recent date first
         }
         return 0;
     });
@@ -533,7 +583,29 @@ function sortTodosByDate() {
     todoItems.forEach(item => todoList.appendChild(item));
 }
 
+// Function to sort To-Do items by later date (ascending order)
+function sortTodosByLaterDate() {
+    const todoList = document.getElementById('todo-list');
+    const todoItems = Array.from(todoList.getElementsByTagName('li'));
 
+    // Sort items by due date (ascending order: later date first)
+    todoItems.sort((a, b) => {
+        const aDateMatch = a.textContent.match(/\(Due: (\d{4}-\d{2}-\d{2})\)/);
+        const bDateMatch = b.textContent.match(/\(Due: (\d{4}-\d{2}-\d{2})\)/);
+
+        if (aDateMatch && bDateMatch) {
+            const aDate = new Date(aDateMatch[1]);
+            const bDate = new Date(bDateMatch[1]);
+
+            return aDate - bDate; // Later date first
+        }
+        return 0;
+    });
+
+    // Clear the list and append sorted items
+    todoList.innerHTML = '';
+    todoItems.forEach(item => todoList.appendChild(item));
+}
 
 // Function to restore the original order of To-Do items
 function restoreOriginalOrder() {
@@ -550,14 +622,31 @@ function restoreOriginalOrder() {
     items.forEach(item => todoList.appendChild(item));
 }
 
-// Handle the checkbox change event
+// Handle checkbox change events
 document.getElementById('sort-recent').addEventListener('change', function () {
+    const sortLaterCheckbox = document.getElementById('sort-later');
+
     if (this.checked) {
-        sortTodosByDate();
+        sortTodosByLaterDate(); // Sort by later date
+        sortLaterCheckbox.checked = false; // Uncheck the later date option
     } else {
-        restoreOriginalOrder();
+        restoreOriginalOrder(); // Restore the original order
     }
 });
+
+document.getElementById('sort-later').addEventListener('change', function () {
+    const sortRecentCheckbox = document.getElementById('sort-recent');
+
+    if (this.checked) {
+        sortTodosByRecentDate(); // Sort by recent date
+        sortRecentCheckbox.checked = false; // Uncheck the recent date option
+    } else {
+        restoreOriginalOrder(); // Restore the original order
+    }
+});
+
+
+
 
 
 // Function to filter To-Do items based on search input
@@ -745,6 +834,11 @@ function createListItem(text, dueDate = "", completed = false) {
         dueDateSpan.classList.add("due-date");
     }
 
+    // Add draggable icon for reordering
+    const dragIcon = document.createElement("i");
+    dragIcon.className = "bi bi-grip-vertical"; // Bootstrap icon class for the drag handle
+    dragIcon.style.cursor = "grab"; // Add cursor change to indicate it's draggable
+
     // Store the original span for future use in editing
     li.originalTextSpan = textSpan;
     li.originalDueDateSpan = dueDateSpan;  // Make sure this is set correctly
@@ -770,6 +864,7 @@ function createListItem(text, dueDate = "", completed = false) {
         updateTodoChart();    // update the chart initially and whenever needed
     };
 
+    li.appendChild(dragIcon);  // Add the drag icon before the task text
     li.appendChild(checkbox);
     li.appendChild(textSpan);
     li.appendChild(dueDateSpan); // Add due date span to the list item
@@ -998,6 +1093,10 @@ document.addEventListener("DOMContentLoaded", function () {
     const priorityList = document.getElementById("priority-list");
 
     const sortable = new Sortable(priorityList, {
+        handle: ".bi-grip-vertical, input[type='checkbox']", // Set the drag icon as the handle for dragging
+        ghostClass: 'blue-background-class',
+        fallbackOnBody: true,
+        swapThreshold: 0.99,
         animation: 150, // Animation speed in milliseconds
 
         onEnd: function (evt) {

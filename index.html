@@ -27,7 +27,7 @@
     <!-- Canonical URL to specify the preferred version of the page -->
     <link rel="canonical" href="https://bibekchandsah.github.io/bibekchandsah">
     <!-- Open Graph meta tags for social media sharing -->
-    <meta property="og:title" content="BibekChandSah (BCS)">
+    <meta property="og:title" content="To-Do List">
     <meta property="og:description"
         content="To-Do list allows users to create, update, delete, and organize their to-do items and priorities. Users can set due dates, mark tasks as completed, and track their progress.">
     <meta property="og:image" content="https://bibekchandsah.github.io/bibekchandsah/assets/images/BCS_Full_Share.png">
@@ -36,7 +36,7 @@
     <!-- Twitter Card meta tags -->
     <meta name="twitter:card" content="summary_large_image">
     <!--     <meta name="twitter:site" content="@YourTwitterHandle"> Replace with your Twitter handle  -->
-    <meta name="twitter:title" content="BibekChandSah (BCS)">
+    <meta name="twitter:title" content="To-Do List">
     <meta name="twitter:description"
         content="To-Do list allows users to create, update, delete, and organize their to-do items and priorities. Users can set due dates, mark tasks as completed, and track their progress.">
     <meta name="twitter:image" content="https://bibekchandsah.github.io/bibekchandsah/assets/images/BCS_Full_Share.png">
@@ -109,13 +109,13 @@
                     <li class="list-group-item active text-center" aria-current="true">To-Do</li>
                     <!-- todo search -->
                     <div class="input-group pt-2 pt-lg-3">
-                        <input type="text" class="form-control" id="todo-search" placeholder="Search To-Do Items"
+                        <input type="text" class="form-control" id="todo-search" autocomplete="off" placeholder="Search To-Do Items"
                             aria-label="Search To-Do Items" aria-describedby="basic-addon2">
                         <span class="input-group-text" id="basic-addon2"><i class="bi bi-search"></i></span>
                     </div>
                     <!-- add new to-do tasks -->
                     <div class="col-md-12 pt-2 pt-lg-3 addTask">
-                        <input type="text" class="form-control" id="new-todo" placeholder="New To-Do Item">
+                        <input type="text" class="form-control" id="new-todo" autocomplete="off" placeholder="New To-Do Item">
                         <input type="date" id="new-todo-due" title="Choose date" placeholder="Due Date">
                         <button type="button" class="btn btn-sm btn-outline-primary new-todo-button"
                             onclick="addTodo()"><i class="bi bi-plus-circle"></i>
@@ -130,14 +130,14 @@
                         <ul class="dropdown-menu" style="width: -webkit-fill-available;">
                             <li><a class="dropdown-item">
                                     <input class="form-check-input" type="checkbox" id="sort-recent">
-                                    <label class="form-check-label" for="flexCheckDefault">
+                                    <label class="form-check-label" for="sort-recent">
                                         Recent date
                                     </label>
                                 </a></li>
                             <li><a class="dropdown-item">
                                     <input class="form-check-input" type="checkbox" id="sort-later">
-                                    <label class="form-check-label" for="flexCheckDefault">
-                                        Later date
+                                    <label class="form-check-label" for="sort-later">
+                                        Late date
                                     </label>
                                 </a></li>
                         </ul>
@@ -153,13 +153,13 @@
                     <li class="list-group-item active text-center" aria-current="true">Priotity</li>
                     <!-- priority search  -->
                     <div class="input-group pt-2 pt-lg-3">
-                        <input type="text" class="form-control" id="priority-search" placeholder="Search Priority Items"
+                        <input type="text" class="form-control" id="priority-search" autocomplete="off" placeholder="Search Priority Items"
                             aria-label="Search Priority Items" aria-describedby="basic-addon2">
                         <span class="input-group-text" id="basic-addon2"><i class="bi bi-search"></i></span>
                     </div>
                     <!-- add new priority tasks -->
                     <div class="col-md-12 pt-2 pt-lg-3 pb-lg-5 addTask">
-                        <input type="text" class="form-control" id="new-priority" placeholder="New Priority Item">
+                        <input type="text" class="form-control" id="new-priority" autocomplete="off" placeholder="New Priority Item">
                         <input type="date" id="new-priority-due" placeholder="Due Date" title="Choose date">
                         <button type="button" class="btn btn-sm btn-outline-primary new-priority-button"
                             onclick="addPriority()"><i class="bi bi-plus-circle"></i>

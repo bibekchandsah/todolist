@@ -133,7 +133,7 @@ body.dark-mode {
 
     background-color: var(--background-color);
 
-    input[type="date"] {
+    input[type="date"], input[type="checkbox"] {
         color-scheme: dark !important;
     }
 
@@ -158,6 +158,10 @@ body.light-mode {
 
 body {
     font-family: Arial, sans-serif;
+}
+
+html, body, body :not(iframe) {
+    color: var(--text-color) !important;
 }
 
 .border {
@@ -339,6 +343,10 @@ input[type="date"] {
     .addTask .new-todo-button, .addTask .new-priority-button {
         width: 36%;
     }
+
+    .priorities {
+        margin-top: 50px;
+    }
 }
 
 .edit-input {
@@ -367,13 +375,23 @@ input[type="date"] {
     border-bottom-left-radius: 50px;
 }
 
-.input-group>:not(:first-child):not(.valid-feedback){
+.input-group>:not(:first-child):not(.valid-feedback) {
     border-top-right-radius: 50px;
     border-bottom-right-radius: 50px;
 }
 
 #todo-list, #priority-list {
     padding: 0px;
+}
+
+@media (max-width: 1400px) {
+    #todo-list, #priority-list {
+        padding-top: 10px;
+    }
+}
+
+#todo-list .bi-grip-vertical {
+    display: none;
 }
 
 
@@ -402,6 +420,7 @@ input[type="date"] {
     color: var(--text-color);
 }
 
+
 #todo-list li .due-date, #priority-list li .due-date {
     text-align: right;
 }
@@ -415,7 +434,7 @@ input[type="date"] {
     background-color: #dc3545;
     color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 50px;
     padding: 5px 10px;
     cursor: pointer;
 }
@@ -432,7 +451,7 @@ textarea {
     background-color: #007bff;
     color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 50px;
     padding: 5px 10px;
     cursor: pointer;
     margin-right: 5px;
@@ -485,6 +504,10 @@ textarea {
     vertical-align: 0em !important;
 }
 
+.bi-grip-vertical::before {
+    vertical-align: 0em;
+}
+
 .notes label, .reminder label {
     margin-left: 10px;
 }
@@ -509,4 +532,28 @@ textarea {
 
 .multiMenuList .bi {
     margin-right: 10px;
+}
+
+#todo-list li, #priority-list li {
+    height: 46px;
+}
+
+#todo-list li:hover, #priority-list li:hover {
+    border: 1px solid blue;
+    border-radius: 25px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.remove-btn, .edit-btn {
+    display: none;
+    transition: transform 0.5s ease;
+    transform: translateX(90px);
+}
+
+#todo-list li:hover>.edit-btn, #todo-list li:hover>.remove-btn,
+#priority-list li:hover>.edit-btn, #priority-list li:hover>.remove-btn {
+    display: block;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.5s ease;
+    transform: translateX(0px);
 }

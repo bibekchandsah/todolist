@@ -11,7 +11,7 @@
     <link rel="shortcut icon" href="assets/favicon/favicon.ico" />
     <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-touch-icon.png" />
     <meta name="apple-mobile-web-app-title" content="To-Do" />
-    <link rel="manifest" href="site.webmanifest"/>
+    <link rel="manifest" href="site.webmanifest" />
     <!-- Provide a brief description of your page -->
     <meta name="description"
         content="To-Do list allows users to create, update, delete, and organize their to-do items and priorities. Users can set due dates, mark tasks as completed, and track their progress.">
@@ -51,7 +51,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- chart js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- sortable js -->
+    <!-- sortable js (https://sortablejs.github.io/Sortable/)-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js"></script>
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
@@ -109,13 +109,15 @@
                     <li class="list-group-item active text-center" aria-current="true">To-Do</li>
                     <!-- todo search -->
                     <div class="input-group pt-2 pt-lg-3">
-                        <input type="text" class="form-control" id="todo-search" autocomplete="off" placeholder="Search To-Do Items"
-                            aria-label="Search To-Do Items" aria-describedby="basic-addon2">
+                        <input type="text" class="form-control" id="todo-search" autocomplete="off"
+                            placeholder="Search To-Do Items" aria-label="Search To-Do Items"
+                            aria-describedby="basic-addon2">
                         <span class="input-group-text" id="basic-addon2"><i class="bi bi-search"></i></span>
                     </div>
                     <!-- add new to-do tasks -->
                     <div class="col-md-12 pt-2 pt-lg-3 addTask">
-                        <input type="text" class="form-control" id="new-todo" autocomplete="off" placeholder="New To-Do Item">
+                        <input type="text" class="form-control" id="new-todo" autocomplete="off"
+                            placeholder="New To-Do Item">
                         <input type="date" id="new-todo-due" title="Choose date" placeholder="Due Date">
                         <button type="button" class="btn btn-sm btn-outline-primary new-todo-button"
                             onclick="addTodo()"><i class="bi bi-plus-circle"></i>
@@ -153,13 +155,15 @@
                     <li class="list-group-item active text-center" aria-current="true">Priotity</li>
                     <!-- priority search  -->
                     <div class="input-group pt-2 pt-lg-3">
-                        <input type="text" class="form-control" id="priority-search" autocomplete="off" placeholder="Search Priority Items"
-                            aria-label="Search Priority Items" aria-describedby="basic-addon2">
+                        <input type="text" class="form-control" id="priority-search" autocomplete="off"
+                            placeholder="Search Priority Items" aria-label="Search Priority Items"
+                            aria-describedby="basic-addon2">
                         <span class="input-group-text" id="basic-addon2"><i class="bi bi-search"></i></span>
                     </div>
                     <!-- add new priority tasks -->
                     <div class="col-md-12 pt-2 pt-lg-3 pb-lg-5 addTask">
-                        <input type="text" class="form-control" id="new-priority" autocomplete="off" placeholder="New Priority Item">
+                        <input type="text" class="form-control" id="new-priority" autocomplete="off"
+                            placeholder="New Priority Item">
                         <input type="date" id="new-priority-due" placeholder="Due Date" title="Choose date">
                         <button type="button" class="btn btn-sm btn-outline-primary new-priority-button"
                             onclick="addPriority()"><i class="bi bi-plus-circle"></i>
@@ -193,6 +197,32 @@
     </div>
     <!-- Notification container -->
     <div id="notification-container" class="notification-container"></div>
+    <!-- task delete comfirmation -->
+    <div class="modal fade modal-sheet position-static d-block bg-body-secondary p-4 py-md-5 removeContainer"
+        tabindex="-1" role="dialog" id="modalSheet">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content rounded-4 shadow">
+                <div class="modal-header border-bottom-0">
+                    <h1 class="modal-title fs-5" style="padding-left: 27%;">Delete Task Confirmation</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body py-0 text-center">
+                    <p>Are you sure you want to delete this task? This action cannot be undone.</p>
+                </div>
+                <div class="form-check" style="padding-left: 2.5em;">
+                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                    <label class="form-check-label" for="flexCheckDefault"> Don't show again </label>
+                </div>
+                <div class="modal-footer flex-nowrap p-0">
+                    <button type="button"
+                        class="btn btn-lg btn-link fs-6 text-decoration-none col-6 py-3 m-0 rounded-0 border-end" id="delete-confirm"><strong>Yes, delete it</strong></button>
+                    <button type="button" class="btn btn-lg btn-link fs-6 text-decoration-none col-6 py-3 m-0 rounded-0"
+                        data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <!-- <div class="multiMenu"><i class="bi bi-ui-checks-grid"></i></div> -->
     <div class="dropdown multiMenu">
         <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"><i

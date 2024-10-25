@@ -851,18 +851,114 @@ function createListItem(text, dueDate = "", completed = false) {
         enterEditMode(li, textSpan, dueDateSpan, editButton);
     };
 
+    // const removeButton = document.createElement("button");
+    // removeButton.className = "remove-btn";
+    // removeButton.innerText = "✖";
+    // removeButton.onclick = function () {
+    //     showNotification(`Task Removed: ${text}`)
+    //     li.remove();
+    //     saveTodosToLocalStorage(); // Or savePrioritiesToLocalStorage based on the list
+    //     savePrioritiesToLocalStorage();
+    //     updateWeeklyTaskTracker();   // Update the tracker for the current week
+    //     updateProgressChart(); // Update the chart when an item is deleted
+    //     updateTodoChart();    // update the chart initially and whenever needed
+    // };
+
+
+
+    // const removeButton = document.createElement("button");
+    // removeButton.className = "remove-btn";
+    // removeButton.innerText = "✖";
+
+    // // Show modal and handle delete confirmation
+    // removeButton.onclick = function () {
+    //     // Show the delete confirmation modal
+    //     const modalContainer = document.querySelector('.removeContainer');
+    //     modalContainer.classList.add('show');
+
+    //     // Define what happens when 'Yes, delete' is clicked
+    //     const confirmDeleteButton = modalContainer.querySelector(".modal-footer .btn-link");
+    //     confirmDeleteButton.onclick = function () {
+    //         showNotification(`Task Removed: ${text}`);
+    //         li.remove();
+    //         saveTodosToLocalStorage(); // Or savePrioritiesToLocalStorage based on the list
+    //         savePrioritiesToLocalStorage();
+    //         updateWeeklyTaskTracker(); // Update the tracker for the current week
+    //         updateProgressChart(); // Update the chart when an item is deleted
+    //         updateTodoChart(); // Update the chart initially and whenever needed
+    //         modalContainer.classList.remove('show'); // Close the modal after deleting
+    //     };
+
+    //     // Define what happens when 'No thanks' is clicked
+    //     const cancelDeleteButton = modalContainer.querySelector(".removeContainer .modal-footer .btn-link[data-bs-dismiss='modal']");
+    //     cancelDeleteButton.onclick = function () {
+    //         modalContainer.classList.remove('show'); // Just close the modal without deleting
+    //     };
+    //     document.querySelector('.removeContainer .btn-close').addEventListener('click', function () {
+    //         document.querySelector('.removeContainer').classList.remove('show');
+    //     });
+
+    // };
+
+
     const removeButton = document.createElement("button");
     removeButton.className = "remove-btn";
     removeButton.innerText = "✖";
+
     removeButton.onclick = function () {
-        showNotification(`Task Removed: ${text}`)
-        li.remove();
-        saveTodosToLocalStorage(); // Or savePrioritiesToLocalStorage based on the list
-        savePrioritiesToLocalStorage();
-        updateWeeklyTaskTracker();   // Update the tracker for the current week
-        updateProgressChart(); // Update the chart when an item is deleted
-        updateTodoChart();    // update the chart initially and whenever needed
+        // Check if the "Don't show again" option is enabled in localStorage
+        const skipConfirmation = localStorage.getItem("skipDeleteConfirmation") === "true";
+
+        if (skipConfirmation) {
+            removeTask(); // Directly remove the task without showing confirmation
+        } else {
+            document.querySelector(".removeContainer").classList.add("show");
+            document.getElementById("delete-confirm").onclick = function () {
+                removeTask(); // Remove task on confirmation
+                document.querySelector(".removeContainer").classList.remove("show");
+            };
+        }
     };
+
+    // Function to remove task and save changes
+    function removeTask() {
+        showNotification(`Task Removed: ${text}`);
+        li.remove();
+        saveTodosToLocalStorage();
+        savePrioritiesToLocalStorage();
+        updateWeeklyTaskTracker();
+        updateProgressChart();
+        updateTodoChart();
+    }
+
+    // Save "Don't show again" preference when checkbox is clicked
+    document.getElementById("flexCheckDefault").addEventListener("change", function () {
+        localStorage.setItem("skipDeleteConfirmation", this.checked ? "true" : "false");
+    });
+
+    // Define what happens when 'No thanks' is clicked
+    const modalContainer = document.querySelector('.removeContainer');
+    const cancelDeleteButton = modalContainer.querySelector(".removeContainer .modal-footer .btn-link[data-bs-dismiss='modal']");
+    cancelDeleteButton.onclick = function () {
+        modalContainer.classList.remove('show'); // Just close the modal without deleting
+    };
+    document.querySelector('.removeContainer .btn-close').addEventListener('click', function () {
+        document.querySelector('.removeContainer').classList.remove('show');
+    });
+
+    // Function to close the modal when clicking outside the content
+    // document.addEventListener("click", function (event) {
+    //     const modalContainer = document.querySelector(".removeContainer");
+    //     const modalContent = document.querySelector(".modal-content");
+
+    //     // Check if modal is currently open and click is outside of modal content
+    //     if (modalContainer.classList.contains("show") && !modalContent.contains(event.target)) {
+    //         modalContainer.classList.remove("show"); // Close the modal
+    //     }
+    // });
+
+
+
 
     li.appendChild(dragIcon);  // Add the drag icon before the task text
     li.appendChild(checkbox);
@@ -1089,14 +1185,56 @@ function saveReminderToLocalStorage() {
 
 
 
+// document.addEventListener("DOMContentLoaded", function () {
+//     const priorityList = document.getElementById("priority-list");
+
+//     const sortable = new Sortable(priorityList, {
+//         handle: ".bi-grip-vertical, input[type='checkbox']", // Set the drag icon as the handle for dragging
+//         ghostClass: 'blue-background-class',
+//         fallbackOnBody: true,
+//         swapThreshold: 0.99,
+//         animation: 150, // Animation speed in milliseconds
+
+//         onEnd: function (evt) {
+//             // Save the new order to local storage after drag-and-drop reordering
+//             saveOrderToLocalStorage();
+//         }
+//     });
+// });
+
+
+
 document.addEventListener("DOMContentLoaded", function () {
+    const todoList = document.getElementById("todo-list");
     const priorityList = document.getElementById("priority-list");
+
+    const sSortable = new Sortable(todoList, {
+        handle: "input[type='checkbox']", // Set the drag icon as the handle for dragging
+        ghostClass: 'blue-background-class',
+        swapClass: 'highlight', // The class applied to the hovered swap item
+        fallbackOnBody: true,
+        swapThreshold: 0.99,
+        group: {
+            name: 'shared',
+            pull: 'clone',
+            put: false // Do not allow items to be put into this list
+        },
+        animation: 150,
+        sort: false, // To disable sorting: set sort to false
+
+        onEnd: function (evt) {
+            // Save the new order to local storage after drag-and-drop reordering
+            saveOrderToLocalStorage();
+        }
+    });
 
     const sortable = new Sortable(priorityList, {
         handle: ".bi-grip-vertical, input[type='checkbox']", // Set the drag icon as the handle for dragging
         ghostClass: 'blue-background-class',
+        swapClass: 'highlight', // The class applied to the hovered swap item
         fallbackOnBody: true,
         swapThreshold: 0.99,
+        group: 'shared',
         animation: 150, // Animation speed in milliseconds
 
         onEnd: function (evt) {
@@ -1105,6 +1243,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 });
+
 
 // Function to save the new order of priority items to local storage
 function saveOrderToLocalStorage() {

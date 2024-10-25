@@ -67,6 +67,9 @@
     --border-focus-color: #5a5a60;
     --border-light-color: #dee2e6;
     --border-dark-color: #0000002d;
+ 
+    --checkbox-background-color: #ffffff;
+    --checkbox-border-color: #767676;
 
     --green-text-color: #0a3622;
     --green-background-color: #d1e7dd;
@@ -113,6 +116,9 @@ body.dark-mode {
     --border-focus-color: #655f56;
     --border-light-color: #383d3f;
     --border-dark-color: #303436;
+
+    --checkbox-background-color: #3b3b3b;
+    --checkbox-border-color: #858585;
 
     --green-text-color: #d4d0ca;
     --green-background-color: #203d33;
@@ -233,6 +239,21 @@ html, body, body :not(iframe) {
 
 .form-switch .form-check-input:focus {
     box-shadow: none;
+}
+
+.form-check .form-check-input:focus {
+    box-shadow: none;
+}
+
+.form-check-input[type=checkbox] {
+    box-shadow: none;
+}
+
+.btn-close{
+    --bs-btn-close-focus-shadow: none;
+    --bs-btn-close-color: var(--text-color);
+    background-color: var(--border-dark-color);
+    border-radius: 50%;
 }
 
 .text-body-emphasis {
@@ -535,7 +556,7 @@ textarea {
 }
 
 #todo-list li, #priority-list li {
-    height: 46px;
+    min-height: 46px;
 }
 
 #todo-list li:hover, #priority-list li:hover {
@@ -556,4 +577,58 @@ textarea {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     transition: transform 0.5s ease;
     transform: translateX(0px);
+}
+
+
+/* .removeContainer {
+    position: fixed !important;
+    display: flex;
+    align-content: center;
+    background-color: #2221217d !important;
+    backdrop-filter: blur(3px);
+}
+
+.fade:not(.show) {
+    opacity: 0;
+    display: none !important;
+} */
+
+
+.removeContainer {
+    position: fixed !important;
+    display: none; /* Default hidden */
+    align-content: center;
+    background-color: #2221217d !important;
+    backdrop-filter: blur(3px);
+    z-index: 1050; /* Ensure it appears above other elements */
+}
+
+.removeContainer.show {
+    display: flex; /* Show modal when .show class is added */
+    opacity: 1; /* Optional: Add transition for fade effect */
+}
+
+.fade:not(.show) {
+    opacity: 0;
+    display: none !important;
+}
+
+
+
+.modal-content {
+    color: var(--text-color);
+    background-color: var(--background-color);
+    border-color: var(--border-dark-color);
+}
+
+.modal-footer {
+    border-color: var(--border-light-color);
+}
+
+.border-end {
+    border-right-color: var(--border-light-color) !important;
+}
+
+.btn-close {
+    color: var(--text-color) !important;
 }

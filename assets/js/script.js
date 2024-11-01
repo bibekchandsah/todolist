@@ -978,6 +978,70 @@ function createListItem(text, dueDate = "", completed = false) {
 }
 
 // Function to enter edit mode
+// function enterEditMode(li, textSpan, dueDateSpan, editButton) {
+//     const input = document.createElement("input");
+//     input.type = "text";
+//     input.value = textSpan.textContent;
+//     input.className = "edit-input";
+
+//     const todayString = getLocalDateString(); // Get corrected local date string
+//     const dueDateInput = document.createElement("input");
+//     dueDateInput.type = "date";
+//     dueDateInput.setAttribute('min', todayString);
+//     // dueDateInput.value = dueDateSpan.textContent.replace("Due: ", "") || ""; // Remove "Due: " prefix
+//     // Pre-fill the date input with the previous date, stripping "Due: " if it exists
+//     dueDateInput.value = dueDateSpan && dueDateSpan.textContent.includes(" Due: ") ?
+//         dueDateSpan.textContent.replace(" Due: ", "") : "";
+//     // dueDateInput.className = "edit-date-input";
+
+//     li.replaceChild(input, textSpan);
+//     // li.replaceChild(dueDateInput, dueDateSpan);
+//     if (dueDateSpan) {
+//         li.replaceChild(dueDateInput, dueDateSpan);
+//     }
+//     editButton.innerText = "✔️";
+
+//     let enterPressed = false;
+
+//     input.addEventListener("keydown", function (event) {
+//         if (event.key === "Enter") {
+//             event.preventDefault(); // Prevent default behavior
+//             dueDateInput.focus(); // Move focus to due date input
+//             // enterPressed = true;
+//             // saveEditedItem(li, input, dueDateInput, editButton);
+//             document.removeEventListener("click", outsideClickListener); // Remove listener after saving
+//         }
+//     });
+
+//     dueDateInput.addEventListener("keydown", function (event) {
+//         if (event.key === "Enter") {
+//             enterPressed = true;
+//             saveEditedItem(li, input, dueDateInput, editButton);
+//             document.removeEventListener("click", outsideClickListener); // Remove listener after saving
+//         }
+//     });
+
+//     // Click outside to save changes
+//     function outsideClickListener(event) {
+//         // Only save if the click happens outside the current "li" element
+//         if (!li.contains(event.target)) {
+//             saveEditedItem(li, input, dueDateInput, editButton);
+//             document.removeEventListener("click", outsideClickListener); // Remove listener after saving
+//         }
+//     }
+
+//     // Attach the outside click listener to the document
+//     document.addEventListener("click", outsideClickListener);
+
+//     // Prevent immediate save when clicking inside date input
+//     dueDateInput.addEventListener("click", function (event) {
+//         event.stopPropagation(); // Stop the click event from bubbling up
+//     });
+
+//     input.focus();
+// }
+
+
 function enterEditMode(li, textSpan, dueDateSpan, editButton) {
     const input = document.createElement("input");
     input.type = "text";
@@ -999,7 +1063,9 @@ function enterEditMode(li, textSpan, dueDateSpan, editButton) {
     if (dueDateSpan) {
         li.replaceChild(dueDateInput, dueDateSpan);
     }
-    editButton.innerText = "✔️";
+    editButton.innerText = "✔";
+    editButton.onclick = function(){saveEditedItem(li, input, dueDateInput, editButton);
+            document.removeEventListener("click", outsideClickListener); }
 
     let enterPressed = false;
 
@@ -1040,6 +1106,8 @@ function enterEditMode(li, textSpan, dueDateSpan, editButton) {
 
     input.focus();
 }
+
+
 
 // Function to save the edited item
 function saveEditedItem(li, input, dueDateInput, editButton) {

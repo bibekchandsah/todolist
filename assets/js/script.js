@@ -560,52 +560,52 @@ window.onload = setMinDate;
 
 
 // Function to sort To-Do items by most recent date (descending order)
-function sortTodosByRecentDate() {
-    const todoList = document.getElementById('todo-list');
-    const todoItems = Array.from(todoList.getElementsByTagName('li'));
+// function sortTodosByRecentDate() {
+//     const todoList = document.getElementById('todo-list');
+//     const todoItems = Array.from(todoList.getElementsByTagName('li'));
 
-    // Sort items by due date (descending order: recent first)
-    todoItems.sort((a, b) => {
-        const aDateMatch = a.textContent.match(/\(Due: (\d{4}-\d{2}-\d{2})\)/);
-        const bDateMatch = b.textContent.match(/\(Due: (\d{4}-\d{2}-\d{2})\)/);
+//     // Sort items by due date (descending order: recent first)
+//     todoItems.sort((a, b) => {
+//         const aDateMatch = a.textContent.match(/\(Due: (\d{4}-\d{2}-\d{2})\)/);
+//         const bDateMatch = b.textContent.match(/\(Due: (\d{4}-\d{2}-\d{2})\)/);
 
-        if (aDateMatch && bDateMatch) {
-            const aDate = new Date(aDateMatch[1]);
-            const bDate = new Date(bDateMatch[1]);
+//         if (aDateMatch && bDateMatch) {
+//             const aDate = new Date(aDateMatch[1]);
+//             const bDate = new Date(bDateMatch[1]);
 
-            return bDate - aDate; // Recent date first
-        }
-        return 0;
-    });
+//             return bDate - aDate; // Recent date first
+//         }
+//         return 0;
+//     });
 
-    // Clear the list and append sorted items
-    todoList.innerHTML = '';
-    todoItems.forEach(item => todoList.appendChild(item));
-}
+//     // Clear the list and append sorted items
+//     todoList.innerHTML = '';
+//     todoItems.forEach(item => todoList.appendChild(item));
+// }
 
-// Function to sort To-Do items by later date (ascending order)
-function sortTodosByLaterDate() {
-    const todoList = document.getElementById('todo-list');
-    const todoItems = Array.from(todoList.getElementsByTagName('li'));
+// // Function to sort To-Do items by later date (ascending order)
+// function sortTodosByLaterDate() {
+//     const todoList = document.getElementById('todo-list');
+//     const todoItems = Array.from(todoList.getElementsByTagName('li'));
 
-    // Sort items by due date (ascending order: later date first)
-    todoItems.sort((a, b) => {
-        const aDateMatch = a.textContent.match(/\(Due: (\d{4}-\d{2}-\d{2})\)/);
-        const bDateMatch = b.textContent.match(/\(Due: (\d{4}-\d{2}-\d{2})\)/);
+//     // Sort items by due date (ascending order: later date first)
+//     todoItems.sort((a, b) => {
+//         const aDateMatch = a.textContent.match(/\(Due: (\d{4}-\d{2}-\d{2})\)/);
+//         const bDateMatch = b.textContent.match(/\(Due: (\d{4}-\d{2}-\d{2})\)/);
 
-        if (aDateMatch && bDateMatch) {
-            const aDate = new Date(aDateMatch[1]);
-            const bDate = new Date(bDateMatch[1]);
+//         if (aDateMatch && bDateMatch) {
+//             const aDate = new Date(aDateMatch[1]);
+//             const bDate = new Date(bDateMatch[1]);
 
-            return aDate - bDate; // Later date first
-        }
-        return 0;
-    });
+//             return aDate - bDate; // Later date first
+//         }
+//         return 0;
+//     });
 
-    // Clear the list and append sorted items
-    todoList.innerHTML = '';
-    todoItems.forEach(item => todoList.appendChild(item));
-}
+//     // Clear the list and append sorted items
+//     todoList.innerHTML = '';
+//     todoItems.forEach(item => todoList.appendChild(item));
+// }
 
 // Function to restore the original order of To-Do items
 function restoreOriginalOrder() {
@@ -623,27 +623,106 @@ function restoreOriginalOrder() {
 }
 
 // Handle checkbox change events
-document.getElementById('sort-recent').addEventListener('change', function () {
-    const sortLaterCheckbox = document.getElementById('sort-later');
+// document.getElementById('sort-recent').addEventListener('change', function () {
+//     const sortLaterCheckbox = document.getElementById('sort-later');
 
+//     if (this.checked) {
+//         sortTodosByLaterDate(); // Sort by later date
+//         sortLaterCheckbox.checked = false; // Uncheck the later date option
+//     } else {
+//         restoreOriginalOrder(); // Restore the original order
+//     }
+// });
+
+// document.getElementById('sort-later').addEventListener('change', function () {
+//     const sortRecentCheckbox = document.getElementById('sort-recent');
+
+//     if (this.checked) {
+//         sortTodosByRecentDate(); // Sort by recent date
+//         sortRecentCheckbox.checked = false; // Uncheck the recent date option
+//     } else {
+//         restoreOriginalOrder(); // Restore the original order
+//     }
+// });
+
+
+
+
+
+
+// Function to sort To-Do items
+function sortTodos(option) {
+    const todoList = document.getElementById("todo-list");
+    const todoItems = Array.from(todoList.getElementsByTagName("li"));
+
+    todoItems.sort((a, b) => {
+        const aCheckbox = a.querySelector("input[type='checkbox']");
+        const bCheckbox = b.querySelector("input[type='checkbox']");
+        const aDateMatch = a.textContent.match(/\(Due: (\d{4}-\d{2}-\d{2})\)/);
+        const bDateMatch = b.textContent.match(/\(Due: (\d{4}-\d{2}-\d{2})\)/);
+
+        const aDate = aDateMatch ? new Date(aDateMatch[1]) : null;
+        const bDate = bDateMatch ? new Date(bDateMatch[1]) : null;
+
+        if (option === "recent") {
+            // Sort by most recent date (descending order)
+            if (aDate && bDate) return bDate - aDate;
+        } else if (option === "later") {
+            // Sort by later date (ascending order)
+            if (aDate && bDate) return aDate - bDate;
+        } else if (option === "checked") {
+            // Sort checked items to the bottom
+            if (aCheckbox.checked !== bCheckbox.checked) {
+                return aCheckbox.checked - bCheckbox.checked;
+            }
+        }
+
+        return 0; // Keep items in the same order if no sorting criteria match
+    });
+
+    // Clear the list and append sorted items
+    todoList.innerHTML = "";
+    todoItems.forEach(item => todoList.appendChild(item));
+}
+
+// Event Listeners for Sort Options
+document.getElementById("sort-recent").addEventListener("change", function () {
     if (this.checked) {
-        sortTodosByLaterDate(); // Sort by later date
-        sortLaterCheckbox.checked = false; // Uncheck the later date option
-    } else {
+        sortTodos("recent");
+        uncheckOtherSorts(this.id);
+    }else{
         restoreOriginalOrder(); // Restore the original order
     }
 });
 
-document.getElementById('sort-later').addEventListener('change', function () {
-    const sortRecentCheckbox = document.getElementById('sort-recent');
-
+document.getElementById("sort-later").addEventListener("change", function () {
     if (this.checked) {
-        sortTodosByRecentDate(); // Sort by recent date
-        sortRecentCheckbox.checked = false; // Uncheck the recent date option
-    } else {
+        sortTodos("later");
+        uncheckOtherSorts(this.id);
+    }else{
         restoreOriginalOrder(); // Restore the original order
     }
 });
+
+document.getElementById("sort-checked").addEventListener("change", function () {
+    if (this.checked) {
+        sortTodos("checked");
+        uncheckOtherSorts(this.id);
+    }else{
+        restoreOriginalOrder(); // Restore the original order
+    }
+});
+
+// Utility function to uncheck other sort checkboxes
+function uncheckOtherSorts(currentId) {
+    const sortCheckboxes = document.querySelectorAll(".form-check-input");
+    sortCheckboxes.forEach(checkbox => {
+        if (checkbox.id !== currentId) {
+            checkbox.checked = false;
+        }
+    });
+}
+
 
 
 
@@ -790,19 +869,6 @@ function createListItem(text, dueDate = "", completed = false) {
     checkbox.type = "checkbox";
     checkbox.checked = completed;
 
-    // Toggle line-through effect when checkbox is checked
-    // checkbox.onclick = function () {
-    //     li.style.textDecoration = checkbox.checked ? "line-through" : "none";
-    //     updateProgressChart(); // Update the chart when an item is checked
-    //     // Save the updated Priority list to local storage
-    //     savePrioritiesToLocalStorage();
-    //     saveTodosToLocalStorage();
-    //     updateWeeklyTaskTracker();   // Update the tracker for the current week
-    //     checkTasksDueToday(); // Check for tasks due today
-    //     updateTodoChart();    // update the chart initially and whenever needed
-    //     // li = checkbox.checked ? showNotification(`🎉Task Completed Sucessfully👏`) : "none";
-    //     showNotification(checkbox.checked ? `🎉Task Completed Successfully👏` : `Task Unmarked`);
-    // };
     checkbox.onclick = function () {
         const textSpan = li.querySelector('.todo-text');
         const dueDateSpan = li.querySelector('.due-date');
@@ -851,74 +917,74 @@ function createListItem(text, dueDate = "", completed = false) {
         enterEditMode(li, textSpan, dueDateSpan, editButton);
     };
 
-    // const removeButton = document.createElement("button");
-    // removeButton.className = "remove-btn";
-    // removeButton.innerText = "✖";
-    // removeButton.onclick = function () {
-    //     showNotification(`Task Removed: ${text}`)
-    //     li.remove();
-    //     saveTodosToLocalStorage(); // Or savePrioritiesToLocalStorage based on the list
-    //     savePrioritiesToLocalStorage();
-    //     updateWeeklyTaskTracker();   // Update the tracker for the current week
-    //     updateProgressChart(); // Update the chart when an item is deleted
-    //     updateTodoChart();    // update the chart initially and whenever needed
-    // };
-
-
-
-    // const removeButton = document.createElement("button");
-    // removeButton.className = "remove-btn";
-    // removeButton.innerText = "✖";
-
-    // // Show modal and handle delete confirmation
-    // removeButton.onclick = function () {
-    //     // Show the delete confirmation modal
-    //     const modalContainer = document.querySelector('.removeContainer');
-    //     modalContainer.classList.add('show');
-
-    //     // Define what happens when 'Yes, delete' is clicked
-    //     const confirmDeleteButton = modalContainer.querySelector(".modal-footer .btn-link");
-    //     confirmDeleteButton.onclick = function () {
-    //         showNotification(`Task Removed: ${text}`);
-    //         li.remove();
-    //         saveTodosToLocalStorage(); // Or savePrioritiesToLocalStorage based on the list
-    //         savePrioritiesToLocalStorage();
-    //         updateWeeklyTaskTracker(); // Update the tracker for the current week
-    //         updateProgressChart(); // Update the chart when an item is deleted
-    //         updateTodoChart(); // Update the chart initially and whenever needed
-    //         modalContainer.classList.remove('show'); // Close the modal after deleting
-    //     };
-
-    //     // Define what happens when 'No thanks' is clicked
-    //     const cancelDeleteButton = modalContainer.querySelector(".removeContainer .modal-footer .btn-link[data-bs-dismiss='modal']");
-    //     cancelDeleteButton.onclick = function () {
-    //         modalContainer.classList.remove('show'); // Just close the modal without deleting
-    //     };
-    //     document.querySelector('.removeContainer .btn-close').addEventListener('click', function () {
-    //         document.querySelector('.removeContainer').classList.remove('show');
-    //     });
-
-    // };
-
-
     const removeButton = document.createElement("button");
     removeButton.className = "remove-btn";
     removeButton.innerText = "✖";
 
+    // removeButton.onclick = function () {
+    //     // Check if the "Don't show again" option is enabled in localStorage
+    //     const skipConfirmation = localStorage.getItem("skipDeleteConfirmation") === "true";
+
+    //     if (skipConfirmation) {
+    //         removeTask(); // Directly remove the task without showing confirmation
+    //     } else {
+    //         document.querySelector(".removeContainer").classList.add("show");
+    //         document.getElementById("delete-confirm").onclick = function () {
+    //             removeTask(); // Remove task on confirmation
+    //             document.querySelector(".removeContainer").classList.remove("show");
+    //         };
+    //     }
+    // };
+
+
     removeButton.onclick = function () {
-        // Check if the "Don't show again" option is enabled in localStorage
         const skipConfirmation = localStorage.getItem("skipDeleteConfirmation") === "true";
 
         if (skipConfirmation) {
             removeTask(); // Directly remove the task without showing confirmation
         } else {
-            document.querySelector(".removeContainer").classList.add("show");
-            document.getElementById("delete-confirm").onclick = function () {
-                removeTask(); // Remove task on confirmation
-                document.querySelector(".removeContainer").classList.remove("show");
+
+            const modalBody = document.getElementById("modalSheet").querySelector(".modal-body");
+
+            modalBody.innerHTML = `
+                <p>Are you sure you want to delete these items? This action cannot be undone.</p>
+            `;
+
+
+            const modalContainer = document.querySelector(".removeContainer");
+            const deleteConfirmButton = modalContainer.querySelector("#delete-confirm");
+            const cancelDeleteButton = modalContainer.querySelector(".btn-link[data-bs-dismiss='modal']");
+            const closeModalButton = modalContainer.querySelector(".btn-close");
+
+            // Show the modal
+            modalContainer.classList.add("show");
+
+            // Remove any previous click listeners to avoid duplicate bindings
+            deleteConfirmButton.onclick = function () {
+                removeTask();
+                modalContainer.classList.remove("show");
             };
+
+            cancelDeleteButton.onclick = function () {
+                modalContainer.classList.remove("show");
+            };
+
+            closeModalButton.onclick = function () {
+                modalContainer.classList.remove("show");
+            };
+
+            // Close the modal when clicking outside of it
+            // document.addEventListener("click", function (event) {
+            //     if (!modalContainer.contains(event.target) && !event.target.closest(".btn")) {
+            //         modalContainer.classList.remove("show");
+            //     }
+            // }, { once: true });
         }
     };
+
+
+
+
 
     // Function to remove task and save changes
     function removeTask() {
@@ -977,71 +1043,11 @@ function createListItem(text, dueDate = "", completed = false) {
     return li;
 }
 
+
+
+
+
 // Function to enter edit mode
-// function enterEditMode(li, textSpan, dueDateSpan, editButton) {
-//     const input = document.createElement("input");
-//     input.type = "text";
-//     input.value = textSpan.textContent;
-//     input.className = "edit-input";
-
-//     const todayString = getLocalDateString(); // Get corrected local date string
-//     const dueDateInput = document.createElement("input");
-//     dueDateInput.type = "date";
-//     dueDateInput.setAttribute('min', todayString);
-//     // dueDateInput.value = dueDateSpan.textContent.replace("Due: ", "") || ""; // Remove "Due: " prefix
-//     // Pre-fill the date input with the previous date, stripping "Due: " if it exists
-//     dueDateInput.value = dueDateSpan && dueDateSpan.textContent.includes(" Due: ") ?
-//         dueDateSpan.textContent.replace(" Due: ", "") : "";
-//     // dueDateInput.className = "edit-date-input";
-
-//     li.replaceChild(input, textSpan);
-//     // li.replaceChild(dueDateInput, dueDateSpan);
-//     if (dueDateSpan) {
-//         li.replaceChild(dueDateInput, dueDateSpan);
-//     }
-//     editButton.innerText = "✔️";
-
-//     let enterPressed = false;
-
-//     input.addEventListener("keydown", function (event) {
-//         if (event.key === "Enter") {
-//             event.preventDefault(); // Prevent default behavior
-//             dueDateInput.focus(); // Move focus to due date input
-//             // enterPressed = true;
-//             // saveEditedItem(li, input, dueDateInput, editButton);
-//             document.removeEventListener("click", outsideClickListener); // Remove listener after saving
-//         }
-//     });
-
-//     dueDateInput.addEventListener("keydown", function (event) {
-//         if (event.key === "Enter") {
-//             enterPressed = true;
-//             saveEditedItem(li, input, dueDateInput, editButton);
-//             document.removeEventListener("click", outsideClickListener); // Remove listener after saving
-//         }
-//     });
-
-//     // Click outside to save changes
-//     function outsideClickListener(event) {
-//         // Only save if the click happens outside the current "li" element
-//         if (!li.contains(event.target)) {
-//             saveEditedItem(li, input, dueDateInput, editButton);
-//             document.removeEventListener("click", outsideClickListener); // Remove listener after saving
-//         }
-//     }
-
-//     // Attach the outside click listener to the document
-//     document.addEventListener("click", outsideClickListener);
-
-//     // Prevent immediate save when clicking inside date input
-//     dueDateInput.addEventListener("click", function (event) {
-//         event.stopPropagation(); // Stop the click event from bubbling up
-//     });
-
-//     input.focus();
-// }
-
-
 function enterEditMode(li, textSpan, dueDateSpan, editButton) {
     const input = document.createElement("input");
     input.type = "text";
@@ -1064,8 +1070,10 @@ function enterEditMode(li, textSpan, dueDateSpan, editButton) {
         li.replaceChild(dueDateInput, dueDateSpan);
     }
     editButton.innerText = "✔";
-    editButton.onclick = function(){saveEditedItem(li, input, dueDateInput, editButton);
-            document.removeEventListener("click", outsideClickListener); }
+    editButton.onclick = function () {
+        saveEditedItem(li, input, dueDateInput, editButton);
+        document.removeEventListener("click", outsideClickListener);
+    }
 
     let enterPressed = false;
 
@@ -1155,15 +1163,6 @@ function saveEditedItem(li, input, dueDateInput, editButton) {
 
 
 
-
-
-
-
-
-
-
-
-
 // Function to save To-Do list to local storage
 function saveTodosToLocalStorage() {
     const todoList = document.getElementById("todo-list");
@@ -1190,29 +1189,6 @@ function saveTodosToLocalStorage() {
 
 
 // Function to save Priority list to local storage
-// function savePrioritiesToLocalStorage() {
-//     const priorityList = document.getElementById("priority-list");
-//     const priorities = [];
-
-//     priorityList.querySelectorAll("li").forEach(item => {
-//         const taskTextElement = item.querySelector("span.todo-text");
-//         const dueDateElement = item.querySelector("span.due-date");
-
-//         // If task text exists, proceed, otherwise skip the item
-//         if (taskTextElement) {
-//             const taskText = taskTextElement.textContent;
-//             const dueDateText = dueDateElement ? dueDateElement.textContent : "";
-//             const checkbox = item.querySelector("input[type='checkbox']").checked;
-//             const dueDate = dueDateText ? dueDateText.replace(" (Due: ", "").replace(")", "") : "";
-
-//             // priorities.push({ text: taskText, dueDate: dueDate, completed: checkbox });
-//             priorities.push({ text: taskText, dueDate: dueDate, completed: checkbox});
-//         }
-//     });
-
-//     localStorage.setItem("priorities", JSON.stringify(priorities));
-// }
-
 function savePrioritiesToLocalStorage() {
     const priorityList = document.getElementById("priority-list");
     const priorities = [];
@@ -1252,26 +1228,7 @@ function saveReminderToLocalStorage() {
 }
 
 
-
-// document.addEventListener("DOMContentLoaded", function () {
-//     const priorityList = document.getElementById("priority-list");
-
-//     const sortable = new Sortable(priorityList, {
-//         handle: ".bi-grip-vertical, input[type='checkbox']", // Set the drag icon as the handle for dragging
-//         ghostClass: 'blue-background-class',
-//         fallbackOnBody: true,
-//         swapThreshold: 0.99,
-//         animation: 150, // Animation speed in milliseconds
-
-//         onEnd: function (evt) {
-//             // Save the new order to local storage after drag-and-drop reordering
-//             saveOrderToLocalStorage();
-//         }
-//     });
-// });
-
-
-
+// drag & drop todo itmes & priority
 document.addEventListener("DOMContentLoaded", function () {
     const todoList = document.getElementById("todo-list");
     const priorityList = document.getElementById("priority-list");
@@ -1380,23 +1337,6 @@ function loadDataFromLocalStorage() {
 
     // Load Priority items
     const priorityList = document.getElementById("priority-list");
-    // savedPriorities.forEach(priority => {
-    //     const li = createListItem(priority.text, priority.dueDate, priority.completed);
-    //     // li.querySelector("input[type='checkbox']").checked = priority.completed;
-    //     // li.style.textDecoration = priority.completed ? "line-through" : "none";
-    //     const checkbox = li.querySelector("input[type='checkbox']");
-    //     const textSpan = li.querySelector(".todo-text");
-    //     const dueDateSpan = li.querySelector(".due-date");
-
-    //     // Apply completed state based on local storage data
-    //     checkbox.checked = priority.completed;
-    //     textSpan.style.textDecoration = priority.completed ? "line-through" : "none";
-    //     if (dueDateSpan) {
-    //         dueDateSpan.style.textDecoration = priority.completed ? "line-through" : "none";
-    //     }
-    //     priorityList.appendChild(li);
-    // });
-
     // Clear the current list to prevent duplicates when reloading
     priorityList.innerHTML = '';
 
@@ -1532,3 +1472,166 @@ document.addEventListener('DOMContentLoaded', (event) => {
         localStorage.setItem('colorMode', mode);
     });
 });
+
+
+
+
+
+// show current date and time
+function updateDateTime() {
+    const footerBadge = document.querySelector('.footerBadge .badge');
+    if (footerBadge) {
+        // Get current date and time
+        const now = new Date();
+        const time = now.toLocaleTimeString();
+        const date = now.toLocaleDateString();
+
+        // Update the badge content
+        footerBadge.innerHTML = `
+            <span>Time: ${time}</span>
+            <br>
+            <span>Date: ${date}</span>
+        `;
+    }
+}
+
+// Update date and time every second
+setInterval(updateDateTime, 1000);
+
+// Initial call to set date and time immediately
+updateDateTime();
+
+
+
+
+
+
+
+// delete all the selected data
+const deleteDataButton = document.getElementById("deleteData");
+deleteDataButton.onclick = function () {
+    // Check if the "Don't show again" option is enabled in localStorage
+    const skipConfirmation = localStorage.getItem("skipDeleteConfirmation") === "true";
+
+    if (skipConfirmation) {
+        // Automatically skip confirmation modal if "Don't show again" is checked
+        deleteData(); // Directly remove the task without showing confirmation
+    } else {
+        deleteDataManually();
+
+    }
+}
+
+function deleteData() {
+    // Remove all items directly
+    document.getElementById("todo-list").innerHTML = "";
+    document.getElementById("priority-list").innerHTML = "";
+    document.querySelector(".notes textarea").value = ""; // Clear Notes textarea
+    document.querySelector(".reminder textarea").value = ""; // Clear Remainder textarea
+
+    // Clear data from local storage
+    localStorage.removeItem("todos");
+    localStorage.removeItem("priorities");
+    localStorage.removeItem("notes");
+    localStorage.removeItem("reminder");
+
+    // Save "Don't show again" preference
+    localStorage.setItem("skipDeleteConfirmation", "false");
+
+    // Provide feedback
+    // alert("All data has been deleted.");
+    showNotification("🧹Selected data has been deleted🧹");
+    updateProgressChart(); // Update the progress chart after loading data
+    updateTodoChart();    // update the chart initially and whenever needed
+}
+
+
+function deleteDataManually() {
+    const confirmationModal = document.getElementById("modalSheet");
+    const modalBody = confirmationModal.querySelector(".modal-body");
+
+    // Update modal body to include checkboxes for Notes and Remainders
+    modalBody.innerHTML = `
+        <p>Are you sure you want to delete these items? This action cannot be undone.</p>
+        <div class="form-check" style="padding-left: 2.5em;">
+            <input class="form-check-input" type="checkbox" id="delete-todo" checked>
+            <label class="form-check-label" for="delete-todo">Delete To-Do Items</label>
+        </div>
+        <div class="form-check" style="padding-left: 2.5em;">
+            <input class="form-check-input" type="checkbox" id="delete-priority" checked>
+            <label class="form-check-label" for="delete-priority">Delete Priority Items</label>
+        </div>
+        <div class="form-check" style="padding-left: 2.5em;">
+            <input class="form-check-input" type="checkbox" id="delete-notes" checked>
+            <label class="form-check-label" for="delete-notes">Delete Notes</label>
+        </div>
+        <div class="form-check" style="padding-left: 2.5em;">
+            <input class="form-check-input" type="checkbox" id="delete-remainder" checked>
+            <label class="form-check-label" for="delete-remainder">Delete Remainders</label>
+        </div>
+    `;
+
+    const dontShowAgainCheckbox = document.getElementById("flexCheckDefault");
+    dontShowAgainCheckbox.addEventListener("change", function () {
+        localStorage.setItem("skipDeleteConfirmation", this.checked ? "true" : "false");
+    });
+
+    // Show the modal
+    confirmationModal.style.display = "block";
+    confirmationModal.classList.add("show");
+
+    // Delete action when user confirms
+    const deleteConfirmButton = document.getElementById("delete-confirm");
+    deleteConfirmButton.onclick = function () {
+        if (document.getElementById("delete-todo").checked) {
+            document.getElementById("todo-list").innerHTML = "";
+            localStorage.removeItem("todos");
+        }
+        if (document.getElementById("delete-priority").checked) {
+            document.getElementById("priority-list").innerHTML = "";
+            localStorage.removeItem("priorities");
+        }
+        if (document.getElementById("delete-notes").checked) {
+            document.querySelector(".notes textarea").value = ""; // Clear Notes textarea
+            localStorage.removeItem("notes");
+        }
+        if (document.getElementById("delete-remainder").checked) {
+            document.querySelector(".reminder textarea").value = ""; // Clear Remainder textarea
+            localStorage.removeItem("reminder");
+        }
+
+        // Hide the modal after deletion
+        confirmationModal.style.display = "none";
+        confirmationModal.classList.remove("show");
+
+        // Provide feedback
+        // alert("Selected data has been deleted.");
+        showNotification("🧹Selected data has been deleted🧹");
+        updateProgressChart(); // Update the progress chart after loading data
+        updateTodoChart();    // update the chart initially and whenever needed
+    };
+
+    // Close modal when user clicks outside or presses Cancel
+    // document.addEventListener("click", function (event) {
+    //     if (!confirmationModal.contains(event.target) && !event.target.closest(".btn")) {
+    //         confirmationModal.style.display = "none";
+    //         confirmationModal.classList.remove("show");
+    //     }
+    // });
+
+    function closeModal() {
+        confirmationModal.style.display = "none";
+        confirmationModal.classList.remove("show");
+    }
+
+    document.addEventListener(
+        "click",
+        function (event) {
+            if (!confirmationModal.contains(event.target) && !event.target.closest(".btn")) {
+                closeModal();
+            }
+        },
+        { once: true }
+    );
+
+}

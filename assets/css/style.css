@@ -154,6 +154,25 @@ body.light-mode {
 
 }
 
+/*========== SCROLL BAR ==========*/
+::-webkit-scrollbar {
+    width: .60rem;
+    /* background-color: hsla(var(--hue-color), 100%, 50%, 0.58); */
+    background-color: transparent;
+    border-radius: .5rem;
+}
+
+::-webkit-scrollbar-thumb {
+    /* background-color: hsl(var(--hue-color), 80%, 40%); */
+    background-color: royalblue;
+    border-radius: .5rem;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    /* background-color: hsl(var(--hue-color), 100%, 50%); */
+    background-color: royalblue;
+}
+
 * {
     /* margin: 0;
     padding: 0; */
